@@ -11,13 +11,15 @@ for (var i = 0; i < 10; i++) {
     entities.resources.push(new tree())
 }
 
-var game = setInterval(on_tick, 33);
+console.log(entities)
 
-function on_tick() {
+var game = setInterval(onTick, 33);
+
+function onTick() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (o in entities.organisms) {
-        entities.organisms[o].gather();
+        entities.organisms[o].findClosestResource();
         entities.organisms[o].step();
     }
 
@@ -56,7 +58,13 @@ function organism() {
                 }
 
                 if (this.position.x === this.target.position.x && this.position.y === this.target.position.y) {
-
+                    for (var i = 0; i < entities.resources.length; i++) {
+                        if (entities.resources[i].id === this.target.id) {
+                            entities.resources.splice(i, 1);
+                            this.target = '';
+                            break;
+                        }
+                    }
                 }
             } else {
                 this.position.x += Math.floor(Math.random() * -3) + 2;
@@ -81,17 +89,20 @@ function organism() {
                 this.position.y -= 1;
             }
         },
-        gather: function () {
-            // console.log(this.target);
+        findClosestResource: function () {
             if (this.target === '') {
-                var closest = null;
+                var closestResource = shortestDist = null;
 
                 for (r in entities.resources) {
                     var dist = Math.sqrt(Math.pow(this.position.x - entities.resources[r].position.x, 2), Math.pow(this.position.y - entities.resources[r].position.y, 2));
-                    if (dist < closest || closest === null) {
-                        closest = dist;
-                        this.target = entities.resources[r];
+                    if (dist < shortestDist || shortestDist === null) {
+                        shortestDist = dist;
+                        closestResource = entities.resources[r];
                     }
+                }
+
+                if (closestResource !== null) {
+                    this.target = closestResource;
                 }
             }
         },

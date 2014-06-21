@@ -19,7 +19,6 @@ function onTick() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (o in entities.organisms) {
-        entities.organisms[o].findClosestResource();
         entities.organisms[o].step();
     }
 
@@ -40,6 +39,10 @@ function organism() {
         },
         target: '',
         step: function () {
+            if (this.target === '') {
+                this.findClosestResource();
+            }
+
             if (this.target !== '') {
                 if (this.position.x < this.target.position.x) {
                     this.position.x += 1;
@@ -118,8 +121,8 @@ function tree() {
         id: guid(),
         type: 'tree',
         position: {
-            x: Math.floor(Math.random() * canvas.width) + 1,
-            y: Math.floor(Math.random() * canvas.height) + 1
+            x: Math.floor(Math.random() * canvas.width - 10) + 1,
+            y: Math.floor(Math.random() * canvas.height - 10) + 1
         },
         render: function () {
             ctx.fillStyle = '#276700';

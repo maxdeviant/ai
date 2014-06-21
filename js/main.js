@@ -17,7 +17,8 @@ function on_tick() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (o in entities.organisms) {
-        entities.organisms[o].step()
+        entities.organisms[o].gather();
+        entities.organisms[o].step();
     }
 
     for (e in entities) {
@@ -35,10 +36,33 @@ function organism() {
             x: Math.floor(Math.random() * canvas.width) + 1,
             y: Math.floor(Math.random() * canvas.height) + 1
         },
+        target: '',
         step: function () {
-            this.position.x += Math.floor(Math.random() * -3) + 2;
-            this.position.y += Math.floor(Math.random() * -3) + 2;
+            if (this.target !== '') {
+                if (this.position.x < this.target.position.x) {
+                    this.position.x += 1;
+                }
 
+                if (this.position.x > this.target.position.x) {
+                    this.position.x -= 1;
+                }
+
+                if (this.position.y < this.target.position.y) {
+                    this.position.y += 1;
+                }
+
+                if (this.position.y > this.target.position.y) {
+                    this.position.y -= 1;
+                }
+
+                if (this.position.x === this.target.position.x && this.position.y === this.target.position.y) {
+
+                }
+            } else {
+                this.position.x += Math.floor(Math.random() * -3) + 2;
+                this.position.y += Math.floor(Math.random() * -3) + 2;
+            }
+            
             var margin = 10;
 
             if (this.position.x <= margin) {
@@ -55,6 +79,20 @@ function organism() {
 
             if (this.position.y >= canvas.height - margin) {
                 this.position.y -= 1;
+            }
+        },
+        gather: function () {
+            // console.log(this.target);
+            if (this.target === '') {
+                var closest = null;
+
+                for (r in entities.resources) {
+                    var dist = Math.sqrt(Math.pow(this.position.x - entities.resources[r].position.x, 2), Math.pow(this.position.y - entities.resources[r].position.y, 2));
+                    if (dist < closest || closest === null) {
+                        closest = dist;
+                        this.target = entities.resources[r];
+                    }
+                }
             }
         },
         render: function () {

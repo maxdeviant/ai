@@ -18,21 +18,19 @@ function on_tick() {
     }
 }
 
-console.log(entities)
-
 function organism() {
     return {
         id: guid(),
         position: {
-            'x': Math.floor(Math.random() * 100) + 1,
-            'y': Math.floor(Math.random() * 100) + 1
+            'x': Math.floor(Math.random() * canvas.width) + 1,
+            'y': Math.floor(Math.random() * canvas.height) + 1
         },
         step: function() {
             this.position.x += Math.floor(Math.random() * -3) + 2;
             this.position.y += Math.floor(Math.random() * -3) + 2;
         },
         render: function() {
-            ctx.fillRect(this.position.x, this.position.y, 10, 10)
+            ctx.fillText('O', this.position.x, this.position.y)
         }
     }
 }

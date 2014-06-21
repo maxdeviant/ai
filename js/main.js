@@ -28,6 +28,24 @@ function organism() {
         step: function() {
             this.position.x += Math.floor(Math.random() * -3) + 2;
             this.position.y += Math.floor(Math.random() * -3) + 2;
+
+            var margin = 10;
+
+            if (this.position.x <= margin) {
+                this.position.x += 1;
+            }
+
+            if (this.position.x >= canvas.width - margin) {
+                this.position.x -= 1;
+            }
+
+            if (this.position.y <= margin) {
+                this.position.y += 1;
+            }
+
+            if (this.position.y >= canvas.height - margin) {
+                this.position.y -= 1;
+            }
         },
         render: function() {
             ctx.fillText('O', this.position.x, this.position.y)

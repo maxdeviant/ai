@@ -1,10 +1,12 @@
 var canvas = document.getElementById('screen');
 var ctx = canvas.getContext('2d');
 
-var entities = [];
+var entities = {
+    organisms: []
+};
 
 for (var i = 0; i < 10; i++) {
-    entities.push(new organism());
+    entities.organisms.push(new organism());
 }
 
 var game = setInterval(on_tick, 33);
@@ -12,9 +14,14 @@ var game = setInterval(on_tick, 33);
 function on_tick() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    for (o in entities.organisms) {
+        entities.organisms[o].step()
+    }
+
     for (e in entities) {
-        entities[e].step();
-        entities[e].render();
+        for (x in entities[e]) {
+            entities[e][x].render();
+        }
     }
 }
 
@@ -22,8 +29,8 @@ function organism() {
     return {
         id: guid(),
         position: {
-            'x': Math.floor(Math.random() * canvas.width) + 1,
-            'y': Math.floor(Math.random() * canvas.height) + 1
+            x: Math.floor(Math.random() * canvas.width) + 1,
+            y: Math.floor(Math.random() * canvas.height) + 1
         },
         step: function() {
             this.position.x += Math.floor(Math.random() * -3) + 2;

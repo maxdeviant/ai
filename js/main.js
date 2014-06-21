@@ -1,26 +1,38 @@
-var canvas = document.getElementById('screen').getContext('2d');
+var canvas = document.getElementById('screen');
+var ctx = canvas.getContext('2d');
 
 var entities = [];
 
 for (var i = 0; i < 10; i++) {
-    entities.push(new organism())
+    entities.push(new organism());
 }
 
-for (e in entities) {
-    entities[e].render()
+var game = setInterval(on_tick, 33);
+
+function on_tick() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (e in entities) {
+        entities[e].step();
+        entities[e].render();
+    }
 }
 
 console.log(entities)
 
 function organism() {
     return {
-        'id': guid(),
-        'position': {
+        id: guid(),
+        position: {
             'x': Math.floor(Math.random() * 100) + 1,
             'y': Math.floor(Math.random() * 100) + 1
         },
-        'render': function() {
-            canvas.fillRect(this.position.x, this.position.y, 10, 10)
+        step: function() {
+            this.position.x += Math.floor(Math.random() * -3) + 2;
+            this.position.y += Math.floor(Math.random() * -3) + 2;
+        },
+        render: function() {
+            ctx.fillRect(this.position.x, this.position.y, 10, 10)
         }
     }
 }

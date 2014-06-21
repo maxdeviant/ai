@@ -29,10 +29,11 @@ function onTick() {
     }
 }
 
-function organism() {
+function organism(sex) {
     return {
         id: guid(),
         type: 'organism',
+        sex: sex || Math.random() < 0.5 ? 'male' : 'female',
         position: {
             x: Math.floor(Math.random() * canvas.width) + 1,
             y: Math.floor(Math.random() * canvas.height) + 1

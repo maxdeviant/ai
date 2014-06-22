@@ -7,7 +7,9 @@ var entities = {
     structures: []
 };
 
-entities.structures.push(new TownHall());
+var townHall = new TownHall();
+
+entities.structures.push(townHall);
 
 for (var i = 0; i < 10; i++) {
     entities.organisms.push(new Organism());
@@ -21,13 +23,13 @@ var game = setInterval(onTick, 33);
 function onTick() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (o in entities.organisms) {
-        entities.organisms[o].step();
+    for (i in entities.organisms) {
+        entities.organisms[i].step();
     }
 
-    for (e in entities) {
-        for (x in entities[e]) {
-            entities[e][x].render();
+    for (i in entities) {
+        for (j in entities[i]) {
+            entities[i][j].render();
         }
     }
 }

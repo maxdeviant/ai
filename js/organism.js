@@ -23,9 +23,32 @@ function Organism(sex) {
                 this.gather();
             }
 
+            if (this.task === 'haul') {
+                this.haul();
+            }
+
             if (this.task === 'build') {
                 this.build();
             }
+        },
+        routeToTarget: function () {
+            if (this.position.x < this.target.position.x) {
+                this.position.x += 1;
+            }
+
+            if (this.position.x > this.target.position.x) {
+                this.position.x -= 1;
+            }
+
+            if (this.position.y < this.target.position.y) {
+                this.position.y += 1;
+            }
+
+            if (this.position.y > this.target.position.y) {
+                this.position.y -= 1;
+            }
+
+            this.checkBlocked();
         },
         checkBlocked: function () {
             var margin = 5;
@@ -61,11 +84,11 @@ function Organism(sex) {
         findClosestResource: function () {
             var closestResource = shortestDist = null;
 
-            for (r in entities.resources) {
-                var dist = Math.sqrt(Math.pow(this.position.x - entities.resources[r].position.x, 2), Math.pow(this.position.y - entities.resources[r].position.y, 2));
+            for (i in entities.resources) {
+                var dist = Math.sqrt(Math.pow(this.position.x - entities.resources[i].position.x, 2), Math.pow(this.position.y - entities.resources[i].position.y, 2));
                 if (dist < shortestDist || shortestDist === null) {
                     shortestDist = dist;
-                    closestResource = entities.resources[r];
+                    closestResource = entities.resources[i];
                 }
             }
 
@@ -85,23 +108,7 @@ function Organism(sex) {
                 this.findClosestResource();
             }
 
-            if (this.position.x < this.target.position.x) {
-                this.position.x += 1;
-            }
-
-            if (this.position.x > this.target.position.x) {
-                this.position.x -= 1;
-            }
-
-            if (this.position.y < this.target.position.y) {
-                this.position.y += 1;
-            }
-
-            if (this.position.y > this.target.position.y) {
-                this.position.y -= 1;
-            }
-
-            this.checkBlocked();
+            this.routeToTarget();
 
             if (this.position.x === this.target.position.x && this.position.y === this.target.position.y) {
                 for (var i = 0; i < entities.resources.length; i++) {
@@ -114,12 +121,29 @@ function Organism(sex) {
 
                         entities.resources.splice(i, 1);
 
-                        this.task = 'idle';
-                        this.target = '';
-                        
+                        this.task = 'haul';
+                        this.target = townHall;
+
                         break;
                     }
                 }
+            }
+        },
+        haul: function () {
+            this.routeToTarget();
+
+            if (this.position.x === this.target.position.x && this.position.y === this.target.position.y) {
+                var keys = Object.keys(this.inventory);
+                for (i in keys) {
+                    if (this.target.stockpile[keys[i]] === undefined) {
+                        this.target.stockpile[keys[i]] = this.inventory[keys[i]];
+                    } else {
+                        this.target.stockpile[keys[i]] += this.inventory[keys[i]];
+                    }
+                }
+
+                this.task = 'idle';
+                this.target = '';
             }
         },
         build: function () {

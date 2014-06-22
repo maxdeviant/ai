@@ -16,6 +16,10 @@ function Organism(sex) {
                     this.findClosestResource();
                 }
 
+                if (this.materialsAvailable('house')) {
+                    this.getBuildingMaterials('house');
+                }
+
                 this.idle();
             }
 
@@ -28,7 +32,7 @@ function Organism(sex) {
             }
 
             if (this.task === 'build') {
-                this.build();
+                this.build('house');
             }
         },
         routeToTarget: function () {
@@ -149,8 +153,72 @@ function Organism(sex) {
                 this.target = '';
             }
         },
-        build: function () {
+        materialsAvailable: function (structure) {
+            for (i in blueprints[structure]) {
+                var resourceType = Object.keys(blueprints[structure]);
+                var resourceAmount = blueprints[structure][i];
+                
+                if (townHall.stockpile[resourceType] < resourceAmount) {
+                    return false;
+                }
+            }
 
+            return true;
+        },
+        getBuildingMaterials: function (structure) {
+            this.target = townHall;
+
+            this.routeToTarget();
+
+            if (this.position.x === this.target.position.x && this.position.y === this.target.position.y) {
+                for (i in blueprints[structure]) {
+                    var resourceType = Object.keys(blueprints[structure]);
+                    var resourceAmount = blueprints[structure][i];
+                    
+                    if (townHall.stockpile[resourceType] >= resourceAmount) {
+                        townHall.stockpile[resourceType] -= resourceAmount;
+
+                        if (this.inventory[resourceType] === undefined) {
+                            this.inventory[resourceType] = resourceAmount;
+                        } else {
+                            this.inventory[resourceType] += resourceAmount;
+                        }
+                    }
+                }
+
+                this.target = {
+                    position: {
+                        x: Math.floor(Math.random() * (canvas.width - 10) + 10),
+                        y: Math.floor(Math.random() * (canvas.height - 10) + 10)
+                    }
+                };
+
+                this.task = 'build';
+                this.build(structure);
+            }
+        },
+        build: function (structure) {
+            this.routeToTarget();
+
+            var haveMaterials = true;
+
+            if (this.position.x === this.target.position.x && this.position.y === this.target.position.y) {
+                for (i in blueprints[structure]) {
+                    var resourceType = Object.keys(blueprints[structure]);
+                    var resourceAmount = blueprints[structure][i];
+
+                    if (this.inventory[resourceType] < resourceAmount) {
+                        haveMaterials = false;
+                    }
+                }
+
+                if (haveMaterials) {
+                    entities.structures.push(new House(this.position.x, this.position.y));
+                }
+
+                this.task = 'idle';
+                this.target = '';
+            }
         },
         render: function () {
             if (this.sex === 'male') {

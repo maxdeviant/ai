@@ -1,4 +1,4 @@
-function organism(sex) {
+function Organism(sex) {
     return {
         id: guid(),
         type: 'organism',

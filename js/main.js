@@ -3,12 +3,15 @@ var ctx = canvas.getContext('2d');
 
 var entities = {
     organisms: [],
-    resources: []
+    resources: [],
+    structures: []
 };
 
+entities.structures.push(new TownHall());
+
 for (var i = 0; i < 10; i++) {
-    entities.organisms.push(new organism());
-    entities.resources.push(new tree())
+    entities.organisms.push(new Organism());
+    entities.resources.push(new Tree());
 }
 
 console.log(entities)

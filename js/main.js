@@ -54,7 +54,7 @@ function organism(sex) {
             }
         },
         checkBlocked: function () {
-            var margin = 10;
+            var margin = 0;
 
             if (this.position.x <= margin) {
                 this.position.x += 1;
@@ -72,7 +72,7 @@ function organism(sex) {
                 this.position.y -= 1;
             }
         },
-        checkTarget: function (type) {
+        targetExists: function (type) {
             for (var i = 0; i < entities[type].length; i++) {
                 if (entities[type][i].id === this.target.id) {
                     return true;
@@ -85,21 +85,19 @@ function organism(sex) {
             return entities.resources.length > 0 ? true : false;
         },
         findClosestResource: function () {
-            if (this.target === '') {
-                var closestResource = shortestDist = null;
+            var closestResource = shortestDist = null;
 
-                for (r in entities.resources) {
-                    var dist = Math.sqrt(Math.pow(this.position.x - entities.resources[r].position.x, 2), Math.pow(this.position.y - entities.resources[r].position.y, 2));
-                    if (dist < shortestDist || shortestDist === null) {
-                        shortestDist = dist;
-                        closestResource = entities.resources[r];
-                    }
+            for (r in entities.resources) {
+                var dist = Math.sqrt(Math.pow(this.position.x - entities.resources[r].position.x, 2), Math.pow(this.position.y - entities.resources[r].position.y, 2));
+                if (dist < shortestDist || shortestDist === null) {
+                    shortestDist = dist;
+                    closestResource = entities.resources[r];
                 }
+            }
 
-                if (closestResource !== null) {
-                    this.task = 'gather';
-                    this.target = closestResource;
-                }
+            if (closestResource !== null) {
+                this.task = 'gather';
+                this.target = closestResource;
             }
         },
         idle: function () {
@@ -108,37 +106,36 @@ function organism(sex) {
             this.checkBlocked();
         },
         gather: function () {
-            if (this.target !== '') {
-                if (!this.checkTarget('resources')) {
-                    this.findClosestResource();
-                }
+            if (!this.targetExists('resources')) {
+                this.task = 'idle';
+                this.findClosestResource();
+            }
 
-                if (this.position.x < this.target.position.x) {
-                    this.position.x += 1;
-                }
+            if (this.position.x < this.target.position.x) {
+                this.position.x += 1;
+            }
 
-                if (this.position.x > this.target.position.x) {
-                    this.position.x -= 1;
-                }
+            if (this.position.x > this.target.position.x) {
+                this.position.x -= 1;
+            }
 
-                if (this.position.y < this.target.position.y) {
-                    this.position.y += 1;
-                }
+            if (this.position.y < this.target.position.y) {
+                this.position.y += 1;
+            }
 
-                if (this.position.y > this.target.position.y) {
-                    this.position.y -= 1;
-                }
+            if (this.position.y > this.target.position.y) {
+                this.position.y -= 1;
+            }
 
-                this.checkBlocked();
+            this.checkBlocked();
 
-                if (this.position.x === this.target.position.x && this.position.y === this.target.position.y) {
-                    for (var i = 0; i < entities.resources.length; i++) {
-                        if (entities.resources[i].id === this.target.id) {
-                            entities.resources.splice(i, 1);
-                            this.task = 'idle';
-                            this.target = '';
-                            break;
-                        }
+            if (this.position.x === this.target.position.x && this.position.y === this.target.position.y) {
+                for (var i = 0; i < entities.resources.length; i++) {
+                    if (entities.resources[i].id === this.target.id) {
+                        entities.resources.splice(i, 1);
+                        this.task = 'idle';
+                        this.target = '';
+                        break;
                     }
                 }
             }

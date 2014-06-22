@@ -134,12 +134,15 @@ function Organism(sex) {
 
             if (this.position.x === this.target.position.x && this.position.y === this.target.position.y) {
                 var keys = Object.keys(this.inventory);
+
                 for (i in keys) {
                     if (this.target.stockpile[keys[i]] === undefined) {
                         this.target.stockpile[keys[i]] = this.inventory[keys[i]];
                     } else {
                         this.target.stockpile[keys[i]] += this.inventory[keys[i]];
                     }
+
+                    this.inventory[keys[i]] = 0;
                 }
 
                 this.task = 'idle';

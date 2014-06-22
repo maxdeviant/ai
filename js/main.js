@@ -112,12 +112,12 @@ function organism(sex) {
         },
         render: function () {
             if (this.sex === 'male') {
-                ctx.fillStyle = '#175ca9'
+                ctx.fillStyle = '#175ca9';
             } else {
-                ctx.fillStyle = '#cc638c'
+                ctx.fillStyle = '#cc638c';
             }
-            
-            ctx.fillText('O', this.position.x, this.position.y)
+
+            ctx.fillText('O', this.position.x, this.position.y);
         }
     }
 }

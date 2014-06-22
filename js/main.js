@@ -54,7 +54,7 @@ function organism(sex) {
             }
         },
         checkBlocked: function () {
-            var margin = 0;
+            var margin = 5;
 
             if (this.position.x <= margin) {
                 this.position.x += 1;
@@ -157,8 +157,8 @@ function tree() {
         id: guid(),
         type: 'tree',
         position: {
-            x: Math.floor(Math.random() * canvas.width - 10) + 10,
-            y: Math.floor(Math.random() * canvas.height - 10) + 10
+            x: Math.floor(Math.random() * (canvas.width - 10) + 10),
+            y: Math.floor(Math.random() * (canvas.height - 10) + 10)
         },
         render: function () {
             ctx.fillStyle = '#276700';

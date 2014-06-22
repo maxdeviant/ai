@@ -29,10 +29,11 @@ function onTick() {
     }
 }
 
-function organism() {
+function organism(sex) {
     return {
         id: guid(),
         type: 'organism',
+        sex: sex || Math.random() < 0.5 ? 'male' : 'female',
         position: {
             x: Math.floor(Math.random() * canvas.width) + 1,
             y: Math.floor(Math.random() * canvas.height) + 1
@@ -110,8 +111,13 @@ function organism() {
             }
         },
         render: function () {
-            ctx.fillStyle = '#000000'
-            ctx.fillText('O', this.position.x, this.position.y)
+            if (this.sex === 'male') {
+                ctx.fillStyle = '#175ca9';
+            } else {
+                ctx.fillStyle = '#cc638c';
+            }
+
+            ctx.fillText('O', this.position.x, this.position.y);
         }
     }
 }

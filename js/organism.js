@@ -9,6 +9,7 @@ function Organism(sex) {
         },
         task: 'idle',
         target: '',
+        inventory: {},
         step: function () {
             if (this.task === 'idle') {
                 if (this.resourceExists()) {
@@ -105,9 +106,17 @@ function Organism(sex) {
             if (this.position.x === this.target.position.x && this.position.y === this.target.position.y) {
                 for (var i = 0; i < entities.resources.length; i++) {
                     if (entities.resources[i].id === this.target.id) {
+                        if (this.inventory[entities.resources[i].resourceType] === undefined) {
+                            this.inventory[entities.resources[i].resourceType] = entities.resources[i].resourceAmount;
+                        } else {
+                            this.inventory[entities.resources[i].resourceType] += entities.resources[i].resourceAmount;
+                        }
+
                         entities.resources.splice(i, 1);
+
                         this.task = 'idle';
                         this.target = '';
+                        
                         break;
                     }
                 }

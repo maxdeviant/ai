@@ -14,6 +14,7 @@ entities.structures.push(townHall);
 for (var i = 0; i < 10; i++) {
     entities.organisms.push(new Organism());
     entities.resources.push(new Tree());
+    entities.resources.push(new Rock());
 }
 
 console.log(entities)

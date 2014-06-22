@@ -37,6 +37,10 @@ function onTick() {
             entities[i][j].render();
         }
     }
+
+    if (Math.random() < 0.02) {
+        entities.resources.push(new Tree());
+    }
 }
 
 function guid() {

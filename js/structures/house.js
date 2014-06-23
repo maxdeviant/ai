@@ -9,8 +9,11 @@ function House(x, y) {
         materials: {
             wood: 2
         },
-        occupants: {},
+        occupants: [],
         capacity: 2,
+        hasVacancy: function() {
+            return this.occupants.length < this.capacity;
+        },
         render: function () {
             ctx.fillStyle = '#682e1a';
             ctx.fillText('h', this.position.x, this.position.y);

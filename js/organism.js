@@ -55,7 +55,7 @@ function Organism(sex) {
             this.checkBlocked();
         },
         checkBlocked: function () {
-            var margin = 5;
+            var margin = 2;
 
             if (this.position.x <= margin) {
                 this.position.x += 1;
@@ -82,6 +82,11 @@ function Organism(sex) {
 
             return false;
         },
+        idle: function () {
+            this.position.x += Math.floor(Math.random() * -3) + 2;
+            this.position.y += Math.floor(Math.random() * -3) + 2;
+            this.checkBlocked();
+        },
         resourceExists: function () {
             return entities.resources.length > 0 ? true : false;
         },
@@ -100,11 +105,6 @@ function Organism(sex) {
                 this.task = 'gather';
                 this.target = closestResource;
             }
-        },
-        idle: function () {
-            this.position.x += Math.floor(Math.random() * -3) + 2;
-            this.position.y += Math.floor(Math.random() * -3) + 2;
-            this.checkBlocked();
         },
         gather: function () {
             if (!this.targetExists('resources')) {
